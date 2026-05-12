@@ -1,0 +1,199 @@
+@startuml
+title Databricks Platform Engineering POC - Architecture and Functional Flow
+
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam defaultFontName Consolas
+skinparam wrapWidth 260
+skinparam maxMessageSize 220
+
+legend left
+  This diagram shows:
+  1) End-to-end data flow (Bronze -> Silver -> Gold -> SQL Analytics)
+  2) Platform controls (Terraform, Unity Catalog grants, cluster policy)
+  3) Delivery lifecycle (Jenkins CI/CD + Databricks Bundle)
+  4) MLOps lifecycle (train -> register -> batch score)
+  5) Databricks Genie / LLM analytics assistant flow
+  6) Functional ownership for interview Q&A
+endlegend
+
+actor "Data Consumer\n(Analyst / Risk / Product)" as consumer
+actor "ML Consumer\n(Risk Ops / Fraud Team)" as ml_consumer
+actor "Platform Engineer\n(You)" as engineer
+
+package "Source and Ingestion" {
+  database "Raw Transaction File\nsample_data/transactions.csv" as raw_file
+  component "Bronze Job\nsrc/jobs/bronze_ingest.py" as bronze_job
+  database "Delta Table\nmain.poc_fintech.bronze_transactions" as bronze_tbl
+}
+
+package "Transformation and Quality" {
+  component "Silver Job\nsrc/jobs/silver_transform.py" as silver_job
+  database "Delta Table\nmain.poc_fintech.silver_transactions" as silver_tbl
+  component "DLT SQL Pipeline\ndlt/pipeline.sql" as dlt_pipeline
+}
+
+package "KPI and Serving Layer" {
+  component "Gold Job\nsrc/jobs/gold_kpi.py" as gold_job
+  database "Delta Table\nmain.poc_fintech.gold_customer_kpi" as gold_tbl
+  component "Customer 360 View\nsql/analytics/customer_360.sql" as customer360
+  component "Risk Features View\nsql/analytics/risk_features.sql" as risk_view
+}
+
+package "MLOps Integration" {
+  component "Train Risk Model\nsrc/mlops/train_risk_model.py" as ml_train
+  component "Register Model\nsrc/mlops/register_model.py" as ml_register
+  component "Batch Scoring\nsrc/mlops/batch_score.py" as ml_score
+  database "MLflow Experiment\n/Shared/poc-fintech-risk-model" as ml_exp
+  database "UC Model Registry\nmain.poc_fintech.risk_score_model" as ml_registry
+  database "Scored Output\nrisk_scores_output.csv / scored table" as ml_output
+}
+
+package "GenAI / Databricks Genie Integration" {
+  component "Genie Prompt Template\nsrc/ai/genie/genie_analyst_prompt.md" as genie_prompt
+  component "Semantic Layer\nconfig/genie/semantic_layer.yaml" as genie_semantic
+  component "Genie Space / LLM Assistant\n(analytics Q&A)" as genie_space
+}
+
+package "Platform Provisioning and Governance" {
+  component "Terraform\ninfra/terraform/*.tf" as terraform
+  component "Unity Catalog Schema + Grants\n(databricks_schema, databricks_grants)" as uc_controls
+  component "Cluster Policy + Job Permissions\n(databricks_cluster_policy,\ndatabricks_permissions)" as platform_controls
+}
+
+package "CI/CD and Deployment" {
+  component "Jenkins Pipeline\njenkins/Jenkinsfile" as jenkins
+  component "Databricks Asset Bundle\ndatabricks.yml" as bundle
+  component "One-command Demo Runner\nscripts/demo_run.ps1" as demo_script
+  component "Unit Tests\ntests/test_transformations.py" as tests
+  component "MLOps Tests/Validation\n(model metrics + checks)" as ml_checks
+}
+
+' Data flow
+raw_file --> bronze_job : Ingest CSV
+bronze_job --> bronze_tbl : Write Delta (append)
+
+bronze_tbl --> silver_job : Read bronze records
+silver_job --> silver_tbl : Clean + standardize\n(default currency, status normalization)
+
+silver_tbl --> gold_job : Aggregate per customer
+gold_job --> gold_tbl : Compute KPIs\n(txn_count, total, avg, failed_ratio)
+
+gold_tbl --> customer360 : Build BI view
+gold_tbl --> risk_view : Build risk feature view
+
+customer360 --> consumer : Customer analytics
+risk_view --> consumer : Risk signals for scoring/monitoring
+
+' MLOps flow
+risk_view --> ml_train : Feature input for training
+ml_train --> ml_exp : Log params/metrics/artifacts
+ml_train --> ml_register : Produce best run_id
+ml_register --> ml_registry : Register governed model version
+ml_registry --> ml_score : Load production model
+risk_view --> ml_score : Feature input for inference
+ml_score --> ml_output : Write risk predictions
+ml_output --> ml_consumer : Prioritized review queue / actions
+
+' Genie/LLM flow
+customer360 --> genie_space : Queryable business metrics
+risk_view --> genie_space : Queryable risk indicators
+genie_prompt --> genie_space : Guardrails and response policy
+genie_semantic --> genie_space : Business definitions and entity mapping
+genie_space --> consumer : Natural language answers + explainability
+
+' Data quality and alternative pipeline pattern
+bronze_tbl --> dlt_pipeline : DLT source
+dlt_pipeline --> silver_tbl : Quality-ready transformation pattern
+dlt_pipeline --> gold_tbl : Managed pipeline style
+
+' Platform and deployment relations
+engineer --> demo_script : Run interview demo
+demo_script --> tests : Execute local quality gate
+demo_script --> terraform : Apply infra
+
+jenkins --> tests : CI test stage
+jenkins --> ml_checks : Model validation gate
+jenkins --> terraform : IaC plan/apply
+jenkins --> bundle : Deploy jobs as code
+bundle --> bronze_job : Package/deploy
+bundle --> silver_job : Package/deploy
+bundle --> gold_job : Package/deploy
+bundle --> ml_train : Package/deploy
+bundle --> ml_score : Package/deploy
+
+terraform --> uc_controls : Provision governance baseline
+terraform --> platform_controls : Enforce operational guardrails
+platform_controls --> bronze_job : Controlled runtime
+platform_controls --> silver_job : Controlled runtime
+platform_controls --> gold_job : Controlled runtime
+uc_controls --> bronze_tbl : Access governance
+uc_controls --> silver_tbl : Access governance
+uc_controls --> gold_tbl : Access governance
+
+note right of bronze_job
+Functional explain:
+- Landing zone for raw events
+- Adds ingest timestamp
+- Preserves source-like structure for traceability
+end note
+
+note right of silver_job
+Functional explain:
+- Applies data quality rules
+- Handles nulls and invalid statuses
+- Produces standardized curated dataset
+end note
+
+note right of gold_job
+Functional explain:
+- Converts transactions into customer KPIs
+- Supports product analytics and risk analytics
+- Creates reusable feature foundation
+end note
+
+note right of ml_train
+Functional explain:
+- Trains baseline risk classifier with MLflow tracking
+- Captures reproducibility (params, metrics, artifacts)
+- Produces run lineage for model governance
+end note
+
+note right of ml_register
+Functional explain:
+- Registers approved model into UC model registry
+- Enables stage-based promotion and access control
+- Provides audit-ready model lifecycle management
+end note
+
+note right of genie_space
+Functional explain:
+- Enables natural-language analytics over governed views
+- Uses semantic metadata for consistent KPI definitions
+- Applies prompt guardrails for safer business responses
+end note
+
+note bottom of terraform
+Functional explain:
+- Reproducible environment setup
+- Declarative governance and permissions
+- Reduces manual drift and deployment risk
+end note
+
+note bottom of jenkins
+Functional explain:
+- CI quality gates (tests)
+- Automated infra deployment
+- Repeatable delivery workflow for team scaling
+end note
+
+note bottom of consumer
+Q&A angle:
+- "How do you ensure quality?" -> Silver + tests + DLT pattern
+- "How do you ensure governance?" -> UC grants + policy + permissions
+- "How do you deploy safely?" -> Jenkins + Terraform + Bundle
+- "How do you operationalize ML?" -> MLflow + Registry + validation gates
+- "How do you apply GenAI safely?" -> Genie + semantic layer + prompt guardrails
+end note
+
+@enduml

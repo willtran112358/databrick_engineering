@@ -1,0 +1,48 @@
+bundle:
+  name: databricks-platform-poc
+
+targets:
+  dev:
+    workspace:
+      host: ${var.DATABRICKS_HOST}
+
+variables:
+  catalog:
+    default: main
+  schema:
+    default: poc_fintech
+  warehouse_id:
+    default: ""
+
+resources:
+  jobs:
+    bronze_ingest_job:
+      name: poc-bronze-ingest-bundle
+      tasks:
+        - task_key: bronze
+          spark_python_task:
+            python_file: ../src/jobs/bronze_ingest.py
+          new_cluster:
+            spark_version: 13.3.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            num_workers: 1
+    silver_transform_job:
+      name: poc-silver-transform-bundle
+      tasks:
+        - task_key: silver
+          spark_python_task:
+            python_file: ../src/jobs/silver_transform.py
+          new_cluster:
+            spark_version: 13.3.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            num_workers: 1
+    gold_kpi_job:
+      name: poc-gold-kpi-bundle
+      tasks:
+        - task_key: gold
+          spark_python_task:
+            python_file: ../src/jobs/gold_kpi.py
+          new_cluster:
+            spark_version: 13.3.x-scala2.12
+            node_type_id: Standard_DS3_v2
+            num_workers: 1

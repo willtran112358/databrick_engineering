@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: fct_customer_risk
+    description: "Customer-level risk mart for monitoring and downstream ML features."
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+      - name: failed_ratio_30d
+        tests:
+          - not_null

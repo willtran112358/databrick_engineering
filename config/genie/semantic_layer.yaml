@@ -1,0 +1,31 @@
+name: poc-fintech-semantic-model
+catalog: main
+schema: poc_fintech
+description: Semantic hints for Databricks Genie business Q&A
+
+entities:
+  - name: customer_360
+    source: v_customer_360
+    grain: customer_id
+    dimensions:
+      - customer_id
+      - value_segment
+    measures:
+      - txn_count_30d
+      - total_amount_30d
+      - avg_amount_30d
+      - failed_txn_30d
+      - failed_ratio_30d
+
+  - name: risk_features
+    source: v_risk_features
+    grain: customer_id
+    dimensions:
+      - customer_id
+      - high_failure_flag
+      - unusual_ticket_size_flag
+    measures:
+      - txn_count_30d
+      - total_amount_30d
+      - avg_amount_30d
+      - failed_ratio_30d

@@ -1,0 +1,5 @@
+customer_id,txn_count_30d,total_amount_30d,avg_amount_30d,failed_ratio_30d
+c001,12,3200,266.66,0.08
+c002,8,400,50.00,0.25
+c003,20,10000,500.00,0.40
+c004,4,600,150.00,0.50

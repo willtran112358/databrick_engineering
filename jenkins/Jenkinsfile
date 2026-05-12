@@ -1,0 +1,53 @@
+pipeline {
+  agent any
+
+  environment {
+    PYTHONUNBUFFERED = "1"
+    TF_IN_AUTOMATION = "true"
+    DATABRICKS_HOST  = credentials("databricks-host")
+    DATABRICKS_TOKEN = credentials("databricks-token")
+  }
+
+  stages {
+    stage("Checkout") {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage("Install") {
+      steps {
+        bat "python -m pip install --upgrade pip"
+        bat "pip install -r requirements.txt"
+      }
+    }
+
+    stage("Unit Tests") {
+      steps {
+        bat "pytest -q"
+      }
+    }
+
+    stage("Package Code") {
+      steps {
+        bat "powershell Compress-Archive -Path src -DestinationPath poc_src.zip -Force"
+      }
+    }
+
+    stage("Terraform Init/Plan/Apply") {
+      steps {
+        dir("infra/terraform") {
+          bat "terraform init"
+          bat "terraform plan -var databricks_host=%DATABRICKS_HOST% -var databricks_token=%DATABRICKS_TOKEN%"
+          bat "terraform apply -auto-approve -var databricks_host=%DATABRICKS_HOST% -var databricks_token=%DATABRICKS_TOKEN%"
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      archiveArtifacts artifacts: "poc_src.zip", allowEmptyArchive: true
+    }
+  }
+}
