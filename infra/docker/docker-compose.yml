@@ -1,0 +1,18 @@
+services:
+  poc-tests:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile
+    working_dir: /app
+    command: ["python", "-m", "pytest", "-q"]
+
+  dbt:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile
+    working_dir: /app/dbt
+    environment:
+      DATABRICKS_HOST: ${DATABRICKS_HOST}
+      DATABRICKS_HTTP_PATH: ${DATABRICKS_HTTP_PATH}
+      DATABRICKS_TOKEN: ${DATABRICKS_TOKEN}
+    command: ["bash", "-lc", "dbt --version && dbt seed && dbt run && dbt test"]

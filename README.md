@@ -9,6 +9,8 @@ Interview-ready data platform demo showing how modern teams build and operate an
 - dbt on Databricks SQL Warehouse (staging + marts + tests)
 - Terraform (IaC for schema, cluster policy, permissions, jobs)
 - Jenkins (CI/CD pipeline and quality gates)
+- Docker (repeatable local/CI runtime for tests + dbt)
+- Kubernetes (optional: scheduled glue jobs like dbt/quality checks, triggering workflows)
 - Databricks Asset Bundle (deployment-as-code)
 - Delta Live Tables style SQL pipeline
 - MLflow MLOps (train, register, batch score)
@@ -68,6 +70,8 @@ flowchart LR
 |-- sql/analytics/            # SQL serving views
 |-- dlt/                      # DLT-style SQL pipeline
 |-- infra/terraform/          # IaC and governance controls
+|-- infra/docker/             # Docker image + compose for repeatable runs
+|-- infra/k8s/                # Optional Kubernetes CronJob patterns
 |-- jenkins/                  # CI/CD pipeline
 |-- config/genie/             # semantic layer starter
 |-- scripts/                  # one-command demo helper
@@ -108,6 +112,7 @@ flowchart LR
 - Show dbt analytics engineering in `dbt/`.
 - Show MLOps lifecycle in `src/mlops/`.
 - Show Genie readiness in `src/ai/genie/` and `config/genie/`.
+- Show how Docker/K8s fit: containers for consistent tooling; K8s for “platform glue” jobs around Databricks.
 - Close with CI/CD and governance story.
 
 ## Notes

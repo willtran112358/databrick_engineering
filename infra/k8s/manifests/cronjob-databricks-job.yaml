@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: poc-trigger-databricks-workflow
+spec:
+  schedule: "30 1 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: trigger
+              image: curlimages/curl:8.7.1
+              env:
+                - name: DATABRICKS_HOST
+                  valueFrom:
+                    secretKeyRef:
+                      name: databricks-creds
+                      key: host
+                - name: DATABRICKS_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: databricks-creds
+                      key: token
+                - name: DATABRICKS_JOB_ID
+                  value: "REPLACE_ME"
+              command:
+                - /bin/sh
+                - -lc
+                - |
+                  curl -sS -X POST "$DATABRICKS_HOST/api/2.1/jobs/run-now" \
+                    -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+                    -H "Content-Type: application/json" \
+                    -d "{\"job_id\": ${DATABRICKS_JOB_ID} }"

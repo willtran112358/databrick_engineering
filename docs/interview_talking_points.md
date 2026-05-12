@@ -13,6 +13,9 @@
 4. DevSecOps/DataOps:
    - Jenkins pipeline with test gate and IaC deployment.
    - Databricks Asset Bundle for deployment standardization.
+5. Runtime standardization:
+   - Docker image ensures repeatable dev/CI environment.
+   - Kubernetes CronJobs (optional) for scheduled “platform glue” (dbt runs, workflow triggers).
 
 ## Suggested demo flow (10-15 minutes)
 
@@ -23,6 +26,7 @@
 5. Show `dlt/pipeline.sql` for data quality-first pipeline design.
 6. Show `databricks.yml` + `jenkins/Jenkinsfile` for deployment and CI/CD.
 7. Run `scripts/demo_run.ps1` as one-command infrastructure + validation demo.
+8. (Optional) Show `infra/docker/` and `infra/k8s/` to explain how teams operationalize dbt/utility jobs around Databricks.
 6. End with how this can scale:
    - Add DLT expectations, Unity Catalog grants, cluster policies, and observability.
 
