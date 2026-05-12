@@ -45,6 +45,6 @@ def run_training(data_path: str, experiment_name: str) -> str:
 if __name__ == "__main__":
     run_id = run_training(
         data_path="sample_data/risk_features_training.csv",
-        experiment_name="/Shared/poc-fintech-risk-model",
+        experiment_name="/Shared/fintech-risk-model",
     )
     print(f"Training completed. run_id={run_id}")

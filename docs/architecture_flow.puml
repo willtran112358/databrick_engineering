@@ -1,5 +1,5 @@
 @startuml
-title Databricks Platform Engineering POC - Architecture and Functional Flow
+title Databricks Platform Engineering - Architecture and Functional Flow
 
 skinparam shadowing false
 skinparam componentStyle rectangle
@@ -24,18 +24,18 @@ actor "Platform Engineer\n(You)" as engineer
 package "Source and Ingestion" {
   database "Raw Transaction File\nsample_data/transactions.csv" as raw_file
   component "Bronze Job\nsrc/jobs/bronze_ingest.py" as bronze_job
-  database "Delta Table\nmain.poc_fintech.bronze_transactions" as bronze_tbl
+  database "Delta Table\nmain.fintech_platform.bronze_transactions" as bronze_tbl
 }
 
 package "Transformation and Quality" {
   component "Silver Job\nsrc/jobs/silver_transform.py" as silver_job
-  database "Delta Table\nmain.poc_fintech.silver_transactions" as silver_tbl
+  database "Delta Table\nmain.fintech_platform.silver_transactions" as silver_tbl
   component "DLT SQL Pipeline\ndlt/pipeline.sql" as dlt_pipeline
 }
 
 package "KPI and Serving Layer" {
   component "Gold Job\nsrc/jobs/gold_kpi.py" as gold_job
-  database "Delta Table\nmain.poc_fintech.gold_customer_kpi" as gold_tbl
+  database "Delta Table\nmain.fintech_platform.gold_customer_kpi" as gold_tbl
   component "Customer 360 View\nsql/analytics/customer_360.sql" as customer360
   component "Risk Features View\nsql/analytics/risk_features.sql" as risk_view
 }
@@ -44,8 +44,8 @@ package "MLOps Integration" {
   component "Train Risk Model\nsrc/mlops/train_risk_model.py" as ml_train
   component "Register Model\nsrc/mlops/register_model.py" as ml_register
   component "Batch Scoring\nsrc/mlops/batch_score.py" as ml_score
-  database "MLflow Experiment\n/Shared/poc-fintech-risk-model" as ml_exp
-  database "UC Model Registry\nmain.poc_fintech.risk_score_model" as ml_registry
+  database "MLflow Experiment\n/Shared/fintech-risk-model" as ml_exp
+  database "UC Model Registry\nmain.fintech_platform.risk_score_model" as ml_registry
   database "Scored Output\nrisk_scores_output.csv / scored table" as ml_output
 }
 

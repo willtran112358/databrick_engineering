@@ -30,6 +30,6 @@ def run(input_table: str, output_table: str) -> None:
 
 if __name__ == "__main__":
     run(
-        input_table="main.poc_fintech.silver_transactions",
-        output_table="main.poc_fintech.gold_customer_kpi",
+        input_table="main.fintech_platform.silver_transactions",
+        output_table="main.fintech_platform.gold_customer_kpi",
     )

@@ -30,7 +30,7 @@ pipeline {
 
     stage("Package Code") {
       steps {
-        bat "powershell Compress-Archive -Path src -DestinationPath poc_src.zip -Force"
+        bat "powershell Compress-Archive -Path src -DestinationPath platform_src.zip -Force"
       }
     }
 
@@ -47,7 +47,7 @@ pipeline {
 
   post {
     always {
-      archiveArtifacts artifacts: "poc_src.zip", allowEmptyArchive: true
+      archiveArtifacts artifacts: "platform_src.zip", allowEmptyArchive: true
     }
   }
 }

@@ -1,22 +1,22 @@
-name: databricks_platform_poc
+name: databricks_platform
 version: 1.0.0
 config-version: 2
 
-profile: databricks_platform_poc
+profile: databricks_platform
 
 model-paths: ["models"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 
 models:
-  databricks_platform_poc:
+  databricks_platform:
     staging:
       +materialized: view
-      +schema: poc_fintech
+      +schema: fintech_platform
     marts:
       +materialized: table
-      +schema: poc_fintech
+      +schema: fintech_platform
 
 seeds:
-  databricks_platform_poc:
-    +schema: poc_fintech
+  databricks_platform:
+    +schema: fintech_platform

@@ -20,4 +20,4 @@ terraform apply -auto-approve -var "databricks_host=$DatabricksHost" -var "datab
 if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
 Pop-Location
 
-Write-Host "POC infrastructure applied. Next: upload src to DBFS and trigger jobs in Databricks."
+Write-Host "Infrastructure applied. Next: upload src to DBFS and trigger jobs in Databricks."

@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: poc-dbt-daily
+  name: fintech-dbt-daily
 spec:
   schedule: "0 2 * * *"
   concurrencyPolicy: Forbid
@@ -14,7 +14,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: dbt
-              image: your-registry/databricks-platform-poc:latest
+              image: your-registry/databricks-platform:latest
               workingDir: /app/dbt
               env:
                 - name: DATABRICKS_HOST

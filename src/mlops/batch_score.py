@@ -16,7 +16,7 @@ def batch_score(model_uri: str, input_csv: str, output_csv: str) -> None:
 
 if __name__ == "__main__":
     batch_score(
-        model_uri="models:/main.poc_fintech.risk_score_model/Production",
+        model_uri="models:/main.fintech_platform.risk_score_model/Production",
         input_csv="sample_data/risk_features_scoring.csv",
         output_csv="sample_data/risk_scores_output.csv",
     )

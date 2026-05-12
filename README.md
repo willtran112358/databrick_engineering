@@ -1,4 +1,4 @@
-# Databricks Platform Engineering POC
+# Databricks Platform Engineering
 
 Interview-ready data platform demo showing how modern teams build and operate analytics and ML workloads on Databricks with cloud integration and CI/CD controls.
 
@@ -117,5 +117,6 @@ flowchart LR
 
 ## Notes
 
-- This is a focused POC for demonstration; extend for production hardening.
+- This repository is a reference implementation; extend with environment-specific policies and operational runbooks for production.
 - Replace placeholders (workspace URL, tokens, IAM/storage config) before real deployment.
+- Analytics objects use Unity Catalog schema `main.fintech_platform`. If you previously used another schema name, migrate tables/views or adjust `schema_name` / dbt profile accordingly.

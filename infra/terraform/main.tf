@@ -3,14 +3,14 @@ provider "databricks" {
   token = var.databricks_token
 }
 
-resource "databricks_schema" "poc_schema" {
+resource "databricks_schema" "platform_schema" {
   catalog_name = var.catalog_name
   name         = var.schema_name
-  comment      = "POC schema for interview demo"
+  comment      = "Managed analytics schema (medallion + serving)"
 }
 
 resource "databricks_grants" "schema_grants" {
-  schema = "${var.catalog_name}.${databricks_schema.poc_schema.name}"
+  schema = "${var.catalog_name}.${databricks_schema.platform_schema.name}"
 
   grant {
     principal  = var.data_engineering_group
@@ -19,7 +19,7 @@ resource "databricks_grants" "schema_grants" {
 }
 
 resource "databricks_cluster_policy" "shared_job_policy" {
-  name = "poc-shared-job-policy"
+  name = "fintech-shared-job-policy"
   definition = jsonencode({
     autotermination_minutes = {
       type  = "fixed"
@@ -35,7 +35,7 @@ resource "databricks_cluster_policy" "shared_job_policy" {
 }
 
 resource "databricks_cluster" "job_cluster" {
-  cluster_name            = "poc-job-cluster"
+  cluster_name            = "fintech-job-cluster"
   spark_version           = "13.3.x-scala2.12"
   node_type_id            = "Standard_DS3_v2"
   autotermination_minutes = 20
@@ -44,12 +44,12 @@ resource "databricks_cluster" "job_cluster" {
 }
 
 resource "databricks_job" "bronze_ingest" {
-  name = "poc-bronze-ingest"
+  name = "fintech-bronze-ingest"
 
   existing_cluster_id = databricks_cluster.job_cluster.id
 
   spark_python_task {
-    python_file = "dbfs:/FileStore/poc/src/jobs/bronze_ingest.py"
+    python_file = "dbfs:/FileStore/platform/src/jobs/bronze_ingest.py"
   }
 }
 
@@ -63,12 +63,12 @@ resource "databricks_permissions" "bronze_job_permissions" {
 }
 
 resource "databricks_job" "silver_transform" {
-  name = "poc-silver-transform"
+  name = "fintech-silver-transform"
 
   existing_cluster_id = databricks_cluster.job_cluster.id
 
   spark_python_task {
-    python_file = "dbfs:/FileStore/poc/src/jobs/silver_transform.py"
+    python_file = "dbfs:/FileStore/platform/src/jobs/silver_transform.py"
   }
 }
 
@@ -82,12 +82,12 @@ resource "databricks_permissions" "silver_job_permissions" {
 }
 
 resource "databricks_job" "gold_kpi" {
-  name = "poc-gold-kpi"
+  name = "fintech-gold-kpi"
 
   existing_cluster_id = databricks_cluster.job_cluster.id
 
   spark_python_task {
-    python_file = "dbfs:/FileStore/poc/src/jobs/gold_kpi.py"
+    python_file = "dbfs:/FileStore/platform/src/jobs/gold_kpi.py"
   }
 }
 

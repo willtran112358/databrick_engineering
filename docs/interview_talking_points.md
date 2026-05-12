@@ -1,6 +1,6 @@
 # Interview Talking Points (TymeX / Head of Data & Analytics)
 
-## What this POC demonstrates
+## What this repository demonstrates
 
 1. Platform engineering mindset:
    - Databricks environment provisioned with Terraform.
@@ -27,7 +27,7 @@
 6. Show `databricks.yml` + `jenkins/Jenkinsfile` for deployment and CI/CD.
 7. Run `scripts/demo_run.ps1` as one-command infrastructure + validation demo.
 8. (Optional) Show `infra/docker/` and `infra/k8s/` to explain how teams operationalize dbt/utility jobs around Databricks.
-6. End with how this can scale:
+9. End with how this can scale:
    - Add DLT expectations, Unity Catalog grants, cluster policies, and observability.
 
 ## Why this aligns with fintech data platform needs

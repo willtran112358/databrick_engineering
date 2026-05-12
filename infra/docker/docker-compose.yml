@@ -1,5 +1,5 @@
 services:
-  poc-tests:
+  ci-tests:
     build:
       context: ../..
       dockerfile: infra/docker/Dockerfile

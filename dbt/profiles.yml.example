@@ -1,9 +1,9 @@
-databricks_platform_poc:
+databricks_platform:
   outputs:
     dev:
       type: databricks
       catalog: main
-      schema: poc_fintech
+      schema: fintech_platform
       host: "{{ env_var('DATABRICKS_HOST') }}"
       http_path: "{{ env_var('DATABRICKS_HTTP_PATH') }}"
       token: "{{ env_var('DATABRICKS_TOKEN') }}"

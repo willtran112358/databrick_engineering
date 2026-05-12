@@ -1,5 +1,5 @@
 output "schema_full_name" {
-  value = "${databricks_schema.poc_schema.catalog_name}.${databricks_schema.poc_schema.name}"
+  value = "${databricks_schema.platform_schema.catalog_name}.${databricks_schema.platform_schema.name}"
 }
 
 output "cluster_id" {

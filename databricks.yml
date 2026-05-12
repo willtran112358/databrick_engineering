@@ -1,5 +1,5 @@
 bundle:
-  name: databricks-platform-poc
+  name: databricks-platform
 
 targets:
   dev:
@@ -10,14 +10,14 @@ variables:
   catalog:
     default: main
   schema:
-    default: poc_fintech
+    default: fintech_platform
   warehouse_id:
     default: ""
 
 resources:
   jobs:
     bronze_ingest_job:
-      name: poc-bronze-ingest-bundle
+      name: fintech-bronze-ingest-bundle
       tasks:
         - task_key: bronze
           spark_python_task:
@@ -27,7 +27,7 @@ resources:
             node_type_id: Standard_DS3_v2
             num_workers: 1
     silver_transform_job:
-      name: poc-silver-transform-bundle
+      name: fintech-silver-transform-bundle
       tasks:
         - task_key: silver
           spark_python_task:
@@ -37,7 +37,7 @@ resources:
             node_type_id: Standard_DS3_v2
             num_workers: 1
     gold_kpi_job:
-      name: poc-gold-kpi-bundle
+      name: fintech-gold-kpi-bundle
       tasks:
         - task_key: gold
           spark_python_task:

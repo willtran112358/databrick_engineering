@@ -1,6 +1,6 @@
-name: poc-fintech-semantic-model
+name: fintech-semantic-model
 catalog: main
-schema: poc_fintech
+schema: fintech_platform
 description: Semantic hints for Databricks Genie business Q&A
 
 entities:

@@ -8,10 +8,10 @@ This folder demonstrates a practical MLOps extension for the platform:
 
 ## Typical Databricks Flow
 
-1. Build features from `main.poc_fintech.v_risk_features`
+1. Build features from `main.fintech_platform.v_risk_features`
 2. Export or load features to training dataframe
 3. Run training job with MLflow tracking
-4. Register best model as `main.poc_fintech.risk_score_model`
+4. Register best model as `main.fintech_platform.risk_score_model`
 5. Promote stages (Staging -> Production)
 6. Run batch or serving inference
 

@@ -21,6 +21,6 @@ def run(
 if __name__ == "__main__":
     run(
         s3_path="s3://your-fintech-raw-zone/transactions/",
-        output_table="main.poc_fintech.bronze_transactions",
+        output_table="main.fintech_platform.bronze_transactions",
         file_format="parquet",
     )

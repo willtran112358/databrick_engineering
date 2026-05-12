@@ -16,9 +16,9 @@ variable "catalog_name" {
 }
 
 variable "schema_name" {
-  description = "Schema for POC objects"
+  description = "Unity Catalog schema for analytics tables and views"
   type        = string
-  default     = "poc_fintech"
+  default     = "fintech_platform"
 }
 
 variable "data_engineering_group" {
