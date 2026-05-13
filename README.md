@@ -1,4 +1,6 @@
-# Databricks Platform Engineering
+# 🚀 Databricks Platform Engineering
+
+> Interview-ready data platform showcase demonstrating modern cloud-native analytics and ML workloads on Databricks with Delta Lake, governance, and production controls.
 
 Interview-ready data platform demo showing how modern teams build and operate analytics and ML workloads on Databricks with cloud integration and CI/CD controls.
 
@@ -19,30 +21,73 @@ Interview-ready data platform demo showing how modern teams build and operate an
 ## Architecture At A Glance
 
 ```mermaid
-flowchart LR
-    A[AWS S3 / Raw Files] --> B[Bronze Spark Ingestion]
-    B --> C[Silver Spark Transform + DQ]
-    C --> D[Gold KPI Aggregates]
-    D --> E[SQL Views: Customer360 / Risk Features]
-    D --> F[dbt Staging + Marts]
-    E --> G[BI / Risk Consumers]
+flowchart TD
+    subgraph INGESTION["📥 Data Ingestion"]
+        A["☁️ AWS S3<br/>Raw Files<br/>Transactions/Customers"]
+        B["🔷 Bronze Layer<br/>Spark Ingestion<br/>Raw Delta Tables"]
+    end
+    
+    subgraph TRANSFORMATION["🔄 Data Transformation"]
+        C["🟢 Silver Layer<br/>Spark Transform<br/>Data Quality Checks<br/>Schema Normalize"]
+        D["⭐ Gold Layer<br/>KPI Aggregates<br/>Customer 360<br/>Risk Features"]
+    end
+    
+    subgraph ANALYTICS["📊 Analytics Layer"]
+        E["📋 SQL Views<br/>Customer360<br/>Risk Features"]
+        F["📦 dbt Models<br/>Staging • Marts<br/>Tests & Contracts"]
+        L["💬 Genie Space<br/>Semantic Layer<br/>Natural Language<br/>Analytics"]
+    end
+    
+    subgraph MLOPS["🤖 ML/MLOps"]
+        H["🎓 MLflow Train<br/>Risk Models<br/>XGBoost/Sklearn"]
+        I["📚 Model Registry<br/>Unity Catalog<br/>Version Control"]
+        J["🎯 Batch Scoring<br/>Real-time<br/>Predictions"]
+        K["🚨 Risk Ops<br/>Alert System<br/>Decision Engine"]
+    end
+    
+    subgraph GOVERNANCE["🛡️ Governance & Control"]
+        M["🏗️ Terraform<br/>Unity Catalog<br/>Cluster Policy<br/>Permissions"]
+        N["🔄 Jenkins CI/CD<br/>Test Execution<br/>Quality Gates<br/>Deployment"]
+    end
+    
+    subgraph CONSUMERS["👥 Consumers"]
+        G["📱 BI Dashboards<br/>Risk Analysts<br/>Fraud Team"]
+    end
+    
+    A --> B
+    B --> C
+    C --> D
+    
+    D --> E
+    D --> F
+    D --> H
+    
+    E --> G
+    E --> L
     F --> G
-
-    E --> H[MLflow Train]
-    H --> I[Model Registry]
-    I --> J[Batch Scoring]
-    J --> K[Risk Ops]
-
-    E --> L[Genie Space + Semantic Layer]
     L --> G
-
-    M[Terraform + UC Governance] --> B
-    M --> C
-    M --> D
-    N[Jenkins + Bundle] --> B
-    N --> C
-    N --> D
-    N --> H
+    
+    H --> I
+    I --> J
+    J --> K
+    K --> G
+    
+    M -.->|governs| B
+    M -.->|governs| C
+    M -.->|governs| D
+    M -.->|governs| I
+    
+    N -.->|deploys| B
+    N -.->|deploys| C
+    N -.->|deploys| D
+    N -.->|deploys| H
+    
+    style INGESTION fill:#ffe6cc,stroke:#ff9900,stroke-width:2px
+    style TRANSFORMATION fill:#ccffcc,stroke:#00cc00,stroke-width:2px
+    style ANALYTICS fill:#ffffcc,stroke:#ffcc00,stroke-width:2px
+    style MLOPS fill:#cce5ff,stroke:#0066cc,stroke-width:2px
+    style GOVERNANCE fill:#ffccff,stroke:#cc00cc,stroke-width:2px
+    style CONSUMERS fill:#ffcccc,stroke:#cc0000,stroke-width:2px
 ```
 
 ## Functional Flow
