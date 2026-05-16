@@ -1,6 +1,6 @@
-name: fintech-semantic-model
+name: tymex-semantic-model
 catalog: main
-schema: fintech_platform
+schema: tymex_platform
 description: Semantic hints for Databricks Genie business Q&A
 
 entities:

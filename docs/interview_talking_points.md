@@ -30,7 +30,7 @@
 9. End with how this can scale:
    - Add DLT expectations, Unity Catalog grants, cluster policies, and observability.
 
-## Why this aligns with fintech data platform needs
+## Why this aligns with Tymex digital banking data platform needs
 
 - Fast iteration with controlled deployment.
 - Clear lineage from raw events to risk-ready features.

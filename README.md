@@ -1,147 +1,109 @@
-# 🚀 Databricks Platform Engineering
+# Tymex Databricks Engineering Platform
 
-> Interview-ready data platform showcase demonstrating modern cloud-native analytics and ML workloads on Databricks with Delta Lake, governance, and production controls.
+> Reference data platform for **Tymex** — a **global digital bank** founded in **South Africa**, scaling cloud-native analytics and ML on **Databricks** (Delta Lake, Unity Catalog, MLOps, Genie).
 
-Interview-ready data platform demo showing how modern teams build and operate analytics and ML workloads on Databricks with cloud integration and CI/CD controls.
+Portfolio implementation showing how a modern digital bank team ingests core-banking and digital-channel events, governs data in Unity Catalog, and ships analytics/ML with **dbt**, **Terraform**, and **CI/CD**.
 
 ## Tech Stack
 
 - Databricks (Spark, SQL, Delta Lake, Unity Catalog)
-- AWS integration pattern (S3 -> Bronze Delta)
+- AWS integration (S3 → Bronze Delta)
 - dbt on Databricks SQL Warehouse (staging + marts + tests)
-- Terraform (IaC for schema, cluster policy, permissions, jobs)
-- Jenkins (CI/CD pipeline and quality gates)
-- Docker (repeatable local/CI runtime for tests + dbt)
-- Kubernetes (optional: scheduled glue jobs like dbt/quality checks, triggering workflows)
-- Databricks Asset Bundle (deployment-as-code)
-- Delta Live Tables style SQL pipeline
+- Terraform (schema, cluster policy, permissions, jobs)
+- Jenkins / GitHub Actions (quality gates)
+- Docker & optional Kubernetes (scheduled dbt / workflow triggers)
+- Databricks Asset Bundles
+- Delta Live Tables–style SQL pipelines
 - MLflow MLOps (train, register, batch score)
-- Genie/LLM analytics assistant starter
+- Genie / LLM analytics assistant starter
 
 ## Architecture At A Glance
 
 ```mermaid
 flowchart TD
-    subgraph INGESTION["📥 Data Ingestion"]
-        A["☁️ AWS S3<br/>Raw Files<br/>Transactions/Customers"]
-        B["🔷 Bronze Layer<br/>Spark Ingestion<br/>Raw Delta Tables"]
+    subgraph INGESTION["Data Ingestion"]
+        A["AWS S3<br/>Core & digital events"]
+        B["Bronze<br/>Raw Delta tables"]
     end
-    
-    subgraph TRANSFORMATION["🔄 Data Transformation"]
-        C["🟢 Silver Layer<br/>Spark Transform<br/>Data Quality Checks<br/>Schema Normalize"]
-        D["⭐ Gold Layer<br/>KPI Aggregates<br/>Customer 360<br/>Risk Features"]
+
+    subgraph TRANSFORMATION["Medallion"]
+        C["Silver<br/>Quality & normalize"]
+        D["Gold<br/>Customer 360 & risk KPIs"]
     end
-    
-    subgraph ANALYTICS["📊 Analytics Layer"]
-        E["📋 SQL Views<br/>Customer360<br/>Risk Features"]
-        F["📦 dbt Models<br/>Staging • Marts<br/>Tests & Contracts"]
-        L["💬 Genie Space<br/>Semantic Layer<br/>Natural Language<br/>Analytics"]
+
+    subgraph ANALYTICS["Analytics"]
+        E["SQL views<br/>Customer360 • Risk"]
+        F["dbt marts<br/>Tests & contracts"]
+        L["Genie semantic layer"]
     end
-    
-    subgraph MLOPS["🤖 ML/MLOps"]
-        H["🎓 MLflow Train<br/>Risk Models<br/>XGBoost/Sklearn"]
-        I["📚 Model Registry<br/>Unity Catalog<br/>Version Control"]
-        J["🎯 Batch Scoring<br/>Real-time<br/>Predictions"]
-        K["🚨 Risk Ops<br/>Alert System<br/>Decision Engine"]
+
+    subgraph MLOPS["MLOps"]
+        H["MLflow training"]
+        I["Unity Catalog registry"]
+        J["Batch scoring"]
+        K["Risk ops alerts"]
     end
-    
-    subgraph GOVERNANCE["🛡️ Governance & Control"]
-        M["🏗️ Terraform<br/>Unity Catalog<br/>Cluster Policy<br/>Permissions"]
-        N["🔄 Jenkins CI/CD<br/>Test Execution<br/>Quality Gates<br/>Deployment"]
+
+    subgraph GOVERNANCE["Platform"]
+        M["Terraform<br/>UC • policies • jobs"]
+        N["CI/CD pipelines"]
     end
-    
-    subgraph CONSUMERS["👥 Consumers"]
-        G["📱 BI Dashboards<br/>Risk Analysts<br/>Fraud Team"]
-    end
-    
-    A --> B
-    B --> C
-    C --> D
-    
+
+    A --> B --> C --> D
     D --> E
     D --> F
     D --> H
-    
-    E --> G
-    E --> L
-    F --> G
-    L --> G
-    
-    H --> I
-    I --> J
-    J --> K
-    K --> G
-    
-    M -.->|governs| B
-    M -.->|governs| C
-    M -.->|governs| D
-    M -.->|governs| I
-    
-    N -.->|deploys| B
-    N -.->|deploys| C
-    N -.->|deploys| D
-    N -.->|deploys| H
-    
-    style INGESTION fill:#ffe6cc,stroke:#ff9900,stroke-width:2px
-    style TRANSFORMATION fill:#ccffcc,stroke:#00cc00,stroke-width:2px
-    style ANALYTICS fill:#ffffcc,stroke:#ffcc00,stroke-width:2px
-    style MLOPS fill:#cce5ff,stroke:#0066cc,stroke-width:2px
-    style GOVERNANCE fill:#ffccff,stroke:#cc00cc,stroke-width:2px
-    style CONSUMERS fill:#ffcccc,stroke:#cc0000,stroke-width:2px
+    H --> I --> J --> K
+    M -.-> B
+    N -.-> B
+
+    style INGESTION fill:#ffe6cc,stroke:#ff9900
+    style TRANSFORMATION fill:#ccffcc,stroke:#00cc00
+    style ANALYTICS fill:#ffffcc,stroke:#ffcc00
+    style MLOPS fill:#cce5ff,stroke:#0066cc
+    style GOVERNANCE fill:#ffccff,stroke:#cc00cc
 ```
 
 ## Functional Flow
 
-- **Bronze**: Ingest raw transactions (CSV/S3) to Delta with ingestion timestamp for lineage.
-- **Silver**: Standardize schema and enforce quality defaults (currency/status normalization).
-- **Gold**: Build customer-level KPIs for analytics and risk use cases.
-- **SQL Serving**: Publish analyst-friendly views for BI and downstream feature usage.
-- **dbt Layer**: Add analytics-engineering contracts (models, tests, reusable marts).
-- **MLOps Layer**: Train with MLflow, register to Unity Catalog registry, batch score features.
-- **GenAI Layer**: Use Genie prompt + semantic model for governed natural language analytics.
-- **Platform Controls**: Terraform + Unity Catalog grants + cluster policy + job permissions.
-- **Delivery Controls**: Jenkins pipeline runs tests and deployment workflow.
+- **Bronze**: Ingest transactions and customer events from S3 with lineage timestamps.
+- **Silver**: Schema normalization, currency/status rules, data quality defaults.
+- **Gold**: Customer-level KPIs for digital banking analytics and risk features.
+- **dbt**: Analytics engineering contracts (staging, marts, tests).
+- **MLOps**: MLflow train → Unity Catalog register → batch score.
+- **Genie**: Governed natural-language analytics over `main.tymex_platform`.
+- **Controls**: Terraform + Unity Catalog grants + cluster policies + Jenkins/GitHub CI.
 
 ## Repository Structure
 
-```text
+```
 .
-|-- src/
-|   |-- jobs/                 # Spark medallion jobs
-|   |-- integrations/aws/     # S3 -> Bronze integration starter
-|   |-- mlops/                # MLflow train/register/score
-|   `-- ai/genie/             # Genie prompt + use cases
-|-- dbt/                      # dbt project (staging/marts/tests/seeds)
-|-- sql/analytics/            # SQL serving views
-|-- dlt/                      # DLT-style SQL pipeline
-|-- infra/terraform/          # IaC and governance controls
-|-- infra/docker/             # Docker image + compose for repeatable runs
-|-- infra/k8s/                # Optional Kubernetes CronJob patterns
-|-- jenkins/                  # CI/CD pipeline
-|-- config/genie/             # semantic layer starter
-|-- scripts/                  # one-command demo helper
-|-- sample_data/              # local demo data
-`-- docs/                     # architecture + interview notes
+├── src/jobs/                 # Spark medallion jobs
+├── src/integrations/aws/   # S3 → Bronze
+├── src/mlops/                # MLflow lifecycle
+├── src/ai/genie/             # Genie prompts
+├── dbt/                      # dbt project
+├── sql/analytics/            # Serving views
+├── infra/terraform/          # IaC & governance
+├── jenkins/                  # CI/CD
+└── docs/                     # Architecture & interview notes
 ```
 
 ## Quick Start (Local)
 
-1. Create and activate venv:
-   - `python -m venv .venv`
-   - `.venv\Scripts\activate`
-2. Install dependencies:
-   - `pip install -r requirements.txt`
-3. Run tests:
-   - `pytest -q`
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+pytest -q
+```
 
-## Deployment Flow (Databricks)
+## Deployment (Databricks)
 
-1. Configure Databricks credentials (`DATABRICKS_HOST`, `DATABRICKS_TOKEN`).
-2. Provision baseline infra with Terraform in `infra/terraform/`.
-3. Deploy jobs via `databricks.yml` and/or Terraform resources.
-4. Run CI/CD stages in `jenkins/Jenkinsfile`.
-5. Execute medallion jobs in order: bronze -> silver -> gold.
-6. Run dbt models/tests and MLOps jobs.
+1. Set `DATABRICKS_HOST`, `DATABRICKS_TOKEN`.
+2. Apply Terraform in `infra/terraform/`.
+3. Deploy bundles via `databricks.yml`.
+4. Run jobs: bronze → silver → gold → dbt → MLOps.
 
 ## One-Command Demo
 
@@ -149,19 +111,9 @@ flowchart TD
 .\scripts\demo_run.ps1 -DatabricksHost "<workspace-url>" -DatabricksToken "<token>"
 ```
 
-## Interview Walkthrough (10-15 min)
-
-- Explain architecture from the Mermaid diagram.
-- Show IaC controls in `infra/terraform/`.
-- Show Spark medallion implementation in `src/jobs/`.
-- Show dbt analytics engineering in `dbt/`.
-- Show MLOps lifecycle in `src/mlops/`.
-- Show Genie readiness in `src/ai/genie/` and `config/genie/`.
-- Show how Docker/K8s fit: containers for consistent tooling; K8s for “platform glue” jobs around Databricks.
-- Close with CI/CD and governance story.
-
 ## Notes
 
-- This repository is a reference implementation; extend with environment-specific policies and operational runbooks for production.
-- Replace placeholders (workspace URL, tokens, IAM/storage config) before real deployment.
-- Analytics objects use Unity Catalog schema `main.fintech_platform`. If you previously used another schema name, migrate tables/views or adjust `schema_name` / dbt profile accordingly.
+- Unity Catalog schema: `main.tymex_platform` (formerly `tymex_platform` in early drafts).
+- Portfolio/demo repo — replace workspace URLs, tokens, and IAM paths before production use.
+
+**Will Tran** — [@willtran112358](https://github.com/willtran112358)

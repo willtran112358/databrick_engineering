@@ -18,7 +18,7 @@ variable "catalog_name" {
 variable "schema_name" {
   description = "Unity Catalog schema for analytics tables and views"
   type        = string
-  default     = "fintech_platform"
+  default     = "tymex_platform"
 }
 
 variable "data_engineering_group" {

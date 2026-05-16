@@ -20,7 +20,7 @@ def run(
 
 if __name__ == "__main__":
     run(
-        s3_path="s3://your-fintech-raw-zone/transactions/",
-        output_table="main.fintech_platform.bronze_transactions",
+        s3_path="s3://your-tymex-raw-zone/transactions/",
+        output_table="main.tymex_platform.bronze_transactions",
         file_format="parquet",
     )

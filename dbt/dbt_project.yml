@@ -12,11 +12,11 @@ models:
   databricks_platform:
     staging:
       +materialized: view
-      +schema: fintech_platform
+      +schema: tymex_platform
     marts:
       +materialized: table
-      +schema: fintech_platform
+      +schema: tymex_platform
 
 seeds:
   databricks_platform:
-    +schema: fintech_platform
+    +schema: tymex_platform

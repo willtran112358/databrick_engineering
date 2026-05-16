@@ -30,6 +30,6 @@ def run(input_table: str, output_table: str) -> None:
 
 if __name__ == "__main__":
     run(
-        input_table="main.fintech_platform.bronze_transactions",
-        output_table="main.fintech_platform.silver_transactions",
+        input_table="main.tymex_platform.bronze_transactions",
+        output_table="main.tymex_platform.silver_transactions",
     )

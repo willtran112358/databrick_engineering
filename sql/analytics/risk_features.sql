@@ -1,5 +1,5 @@
 -- Risk-focused feature view consumed by model training and monitoring
-CREATE OR REPLACE VIEW main.fintech_platform.v_risk_features AS
+CREATE OR REPLACE VIEW main.tymex_platform.v_risk_features AS
 SELECT
   customer_id,
   txn_count_30d,
@@ -14,4 +14,4 @@ SELECT
     WHEN txn_count_30d = 0 THEN 0
     WHEN avg_amount_30d > 800 THEN 1 ELSE 0
   END AS unusual_ticket_size_flag
-FROM main.fintech_platform.gold_customer_kpi;
+FROM main.tymex_platform.gold_customer_kpi;

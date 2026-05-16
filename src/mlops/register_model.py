@@ -11,6 +11,6 @@ if __name__ == "__main__":
     # Replace with actual run_id from training job output.
     version = register_model_from_run(
         run_id="REPLACE_RUN_ID",
-        model_name="main.fintech_platform.risk_score_model",
+        model_name="main.tymex_platform.risk_score_model",
     )
     print(f"Model registered. version={version}")
